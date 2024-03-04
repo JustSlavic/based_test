@@ -1,0 +1,18 @@
+{
+    "folders":
+    [
+        {
+            "path": "."
+        }
+    ],
+    "build_systems":
+    [
+        {
+            "name": "Build",
+            "osx": {
+                "shell_cmd": "$folder/build.sh debug && $folder/bin/test",
+                "working_dir": "$folder",
+            }
+        },
+    ],
+}
