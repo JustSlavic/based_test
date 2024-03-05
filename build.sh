@@ -58,7 +58,7 @@ function build() {
 
     case $os_name in
         Darwin | Linux)
-            build_command="$COMPILER code/main.cpp -o bin/test -std=$STANDARD -I based $WARNINGS $DEBUG"
+            build_command="$COMPILER code/main.cpp -o bin/test -std=$STANDARD -I code/based $WARNINGS $DEBUG"
             build_ "$build_command"
 
             ;;

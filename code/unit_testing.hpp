@@ -70,7 +70,7 @@
 
 #define TEST_ASSERT_FLOAT_EQ(A, B) \
     do { \
-        if (::math::equal(A, B)) { } else { \
+        if (absolute(A, B) < EPSILON) { } else { \
             printf("\n%s:%d FAIL (%s != %s)\n", __FILE__, __LINE__, STRINGIFY(A), STRINGIFY(B)); \
             *success = false; \
             return; \
@@ -79,7 +79,7 @@
 
 #define TEST_ASSERT_FLOAT_NEQ(A, B) \
     do { \
-        if (!::math::equal(A, B)) { } else { \
+        if (absolute(A, B) >= EPSILON) { } else { \
             printf("\n%s:%d FAIL (%s == %s)\n", __FILE__, __LINE__, STRINGIFY(A), STRINGIFY(B)); \
             *success = false; \
             return; \
