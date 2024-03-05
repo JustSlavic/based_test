@@ -1,6 +1,6 @@
 #include "unit_testing.hpp"
 #include <platform.hpp>
-#include <memory_allocator.hpp>
+#include <memory/allocator.hpp>
 #include <web.hpp>
 
 
@@ -42,8 +42,8 @@ TEST(MemoryPool)
     TEST_ASSERT_EQ((uint64) py, TERABYTES(2) + KILOBYTES(1));
 
     pool.deallocate(px);
-
     auto *pz = pool.allocate<int32>();
+
     TEST_ASSERT_EQ((uint64) pz, TERABYTES(2));
 
     platform::deallocate_pages(memory);
@@ -90,7 +90,6 @@ TEST(UrlDecode)
 }
 
 
-
 int main()
 {
     TEST_BEGIN();
@@ -105,7 +104,7 @@ int main()
 }
 
 
-#include <memory_allocator.cpp>
+#include <memory/allocator.cpp>
 #include <web.cpp>
 #include <util.cpp>
 
