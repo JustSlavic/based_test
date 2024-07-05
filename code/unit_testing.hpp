@@ -16,6 +16,7 @@
     printf("--------------------\n"); \
     printf("Tests passed: %d\n", passed_tests_count); \
     printf("Tests failed: %d\n", failed_tests_count); \
+    if (failed_tests_count > 0) return EXIT_FAILURE; \
     (void)0
 
 #define TEST(NAME) \

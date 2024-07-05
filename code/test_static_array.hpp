@@ -1,5 +1,14 @@
 #pragma once
 
+#define RUN_TEST_SUITE__STATIC_ARRAY() \
+    printf("        StaticArray:\n"); \
+    TEST_RUN(StaticArrayInit0); \
+    TEST_RUN(StaticArrayInit1); \
+    TEST_RUN(StaticArrayInit10); \
+    TEST_RUN(StaticArrayBeginAndEnd); \
+    TEST_RUN(StaticArrayResize); \
+    TEST_RUN(StaticArrayPushBack); \
+    (void)0
 
 TEST(StaticArrayInit0)
 {
