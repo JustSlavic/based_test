@@ -90,6 +90,9 @@ TEST(UrlDecode)
 }
 
 
+#include "test_static_array.hpp"
+
+
 int main()
 {
     TEST_BEGIN();
@@ -98,6 +101,13 @@ int main()
     TEST_RUN(MemoryPool);
     TEST_RUN(UrlEncode);
     TEST_RUN(UrlDecode);
+
+    TEST_RUN(StaticArrayInit0);
+    TEST_RUN(StaticArrayInit1);
+    TEST_RUN(StaticArrayInit10);
+    TEST_RUN(StaticArrayBeginAndEnd);
+    TEST_RUN(StaticArrayResize);
+    TEST_RUN(StaticArrayPushBack);
 
     TEST_END();
     return 0;
