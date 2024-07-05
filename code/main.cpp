@@ -59,11 +59,11 @@ TEST(UrlEncode)
     auto decoded = memory_buffer::from(decoded_data, sizeof(decoded_data) - 1);
     auto encoded = memory_buffer::from(encoded_data, sizeof(encoded_data) - 1);
 
-    int result_size = web::url_encode(decoded, memory);
+    uint32 result_size = web::url_encode(decoded, memory);
 
     TEST_ASSERT_EQ(encoded.size, result_size);
     if (encoded.size == result_size)
-        for (int i = 0; i < result_size; i++)
+        for (uint32 i = 0; i < result_size; i++)
             TEST_ASSERT_EQ(encoded.data[i], memory.data[i]);
 
     platform::deallocate_pages(memory);
@@ -79,11 +79,11 @@ TEST(UrlDecode)
     auto decoded = memory_buffer::from(decoded_data, sizeof(decoded_data) - 1);
     auto encoded = memory_buffer::from(encoded_data, sizeof(encoded_data) - 1);
 
-    int result_size = web::url_decode(encoded, memory);
+    uint32 result_size = web::url_decode(encoded, memory);
 
     TEST_ASSERT_EQ(decoded.size, result_size);
     if (decoded.size == result_size)
-        for (int i = 0; i < result_size; i++)
+        for (uint32 i = 0; i < result_size; i++)
             TEST_ASSERT_EQ(decoded.data[i], memory.data[i]);
 
     platform::deallocate_pages(memory);
@@ -118,6 +118,6 @@ int main()
 #include <web.cpp>
 #include <util.cpp>
 
-#if OS_MAC
+#if OS_MAC || OS_LINUX
 #include <os/platform_posix.cpp>
 #endif
