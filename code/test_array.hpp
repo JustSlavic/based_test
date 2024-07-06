@@ -156,8 +156,10 @@ TEST(ArrayPushBack)
 TEST(ArrayInsert)
 {
     auto buffer = mallocator()->allocate_buffer(10 * sizeof(int));
-    array<int> a = make_array<int>(buffer, 1);
+    array<int> a = make_array<int>(buffer);
 
+    // [] => [1]
+    a.insert(a.begin(), 1);
     // [1] => [2, 1]
     a.insert(a.begin(), 2);
     // [2, 1] => [3, 2, 1]

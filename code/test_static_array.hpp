@@ -133,8 +133,10 @@ TEST(StaticArrayPushBack)
 
 TEST(StaticArrayInsert)
 {
-    static_array<int, 10> a = make_static_array<10>(1);
+    static_array<int, 10> a = make_static_array<10, int>();
 
+    // [] => [1]
+    a.insert(a.begin(), 1);
     // [1] => [2, 1]
     a.insert(a.begin(), 2);
     // [2, 1] => [3, 2, 1]
