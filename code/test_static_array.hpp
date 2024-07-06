@@ -12,6 +12,8 @@
     TEST_RUN(StaticArrayResize); \
     TEST_RUN(StaticArrayPushBack); \
     TEST_RUN(StaticArrayInsert); \
+    TEST_RUN(StaticArrayErase); \
+    TEST_RUN(StaticArrayEraseFirst); \
     TEST_RUN(StaticArrayClear); \
     (void)0
 
@@ -162,6 +164,52 @@ TEST(StaticArrayInsert)
     TEST_ASSERT_EQ(a[5], 2);
     TEST_ASSERT_EQ(a[6], 1);
     TEST_ASSERT_EQ(a.size(), 7);
+}
+
+TEST(StaticArrayErase)
+{
+    static_array<int, 5> a = make_static_array<5>(5, 4, 3, 2, 1);
+
+    a.erase(a.begin() + 3);
+    a.erase(a.begin() + 1);
+
+    TEST_ASSERT_EQ(a[0], 5);
+    TEST_ASSERT_EQ(a[1], 3);
+    TEST_ASSERT_EQ(a[2], 1);
+    TEST_ASSERT_EQ(a.size(), 3);
+
+    static_array<int, 5> b = make_static_array<5>(5, 4, 3, 2, 1);
+
+    b.erase_unsorted(b.begin() + 3);
+    b.erase_unsorted(b.begin() + 1);
+
+    TEST_ASSERT_EQ(b[0], 5);
+    TEST_ASSERT_EQ(b[1], 1);
+    TEST_ASSERT_EQ(b[2], 3);
+    TEST_ASSERT_EQ(b.size(), 3);
+}
+
+TEST(StaticArrayEraseFirst)
+{
+    static_array<int, 5> a = make_static_array<5>(5, 4, 3, 2, 1);
+
+    a.erase_first(4);
+    a.erase_first(2);
+
+    TEST_ASSERT_EQ(a[0], 5);
+    TEST_ASSERT_EQ(a[1], 3);
+    TEST_ASSERT_EQ(a[2], 1);
+    TEST_ASSERT_EQ(a.size(), 3);
+
+    static_array<int, 5> b = make_static_array<5>(5, 4, 3, 2, 1);
+
+    b.erase_first_unsorted(4);
+    b.erase_first_unsorted(2);
+
+    TEST_ASSERT_EQ(b[0], 5);
+    TEST_ASSERT_EQ(b[1], 1);
+    TEST_ASSERT_EQ(b[2], 3);
+    TEST_ASSERT_EQ(b.size(), 3);
 }
 
 TEST(StaticArrayClear)
