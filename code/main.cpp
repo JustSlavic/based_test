@@ -1,3 +1,7 @@
+#include <base.h>
+#include <stdio.h>
+#include <console.hpp>
+
 #include "unit_testing.hpp"
 #include <platform.hpp>
 #include <memory/allocator.hpp>
@@ -6,6 +10,7 @@
 
 #include "test_memory_arena.hpp"
 #include "test_static_array.hpp"
+#include "test_array.hpp"
 
 
 int main()
@@ -14,6 +19,7 @@ int main()
 
     RUN_TEST_SUITE__MEMORY_ARENA();
     RUN_TEST_SUITE__STATIC_ARRAY();
+    RUN_TEST_SUITE__ARRAY();
 
     TEST_END();
     return 0;

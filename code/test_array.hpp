@@ -2,22 +2,24 @@
 
 #include "string.hpp"
 #include <array.hpp>
+#include <memory/allocator.hpp>
 
-#define RUN_TEST_SUITE__STATIC_ARRAY() \
-    printf("        StaticArray:\n"); \
-    TEST_RUN(StaticArrayInit0); \
-    TEST_RUN(StaticArrayInit1); \
-    TEST_RUN(StaticArrayInit5); \
-    TEST_RUN(StaticArrayBeginAndEnd); \
-    TEST_RUN(StaticArrayResize); \
-    TEST_RUN(StaticArrayPushBack); \
-    TEST_RUN(StaticArrayInsert); \
-    TEST_RUN(StaticArrayClear); \
+#define RUN_TEST_SUITE__ARRAY() \
+    printf("        Array:\n"); \
+    TEST_RUN(ArrayInit0); \
+    TEST_RUN(ArrayInit1); \
+    TEST_RUN(ArrayInit5); \
+    TEST_RUN(ArrayBeginAndEnd); \
+    TEST_RUN(ArrayResize); \
+    TEST_RUN(ArrayPushBack); \
+    TEST_RUN(ArrayInsert); \
+    TEST_RUN(ArrayClear); \
     (void)0
 
-TEST(StaticArrayInit0)
+TEST(ArrayInit0)
 {
-    static_array<int, 5> a = make_static_array<5, int>(); // Could not deduce T, have to specialize
+    auto buffer = mallocator()->allocate_buffer(5 * sizeof(int));
+    array<int> a = make_array<int>(buffer); // Could not deduce T, have to specialize
 
     int *data = a.data();
     TEST_ASSERT_EQ(data[0], 0);
@@ -27,11 +29,14 @@ TEST(StaticArrayInit0)
     TEST_ASSERT_EQ(data[4], 0);
     TEST_ASSERT_EQ(a.size(), 0);
     TEST_ASSERT_EQ(a.capacity(), 5);
+
+    mallocator()->deallocate(buffer);
 }
 
-TEST(StaticArrayInit1)
+TEST(ArrayInit1)
 {
-    static_array<int, 5> a = make_static_array<5>(42);
+    auto buffer = mallocator()->allocate_buffer(5 * sizeof(int));
+    array<int> a = make_array<int>(buffer, 42);
 
     int *data = a.data();
     TEST_ASSERT_EQ(data[0], 42);
@@ -41,11 +46,14 @@ TEST(StaticArrayInit1)
     TEST_ASSERT_EQ(data[4], 0);
     TEST_ASSERT_EQ(a.size(), 1);
     TEST_ASSERT_EQ(a.capacity(), 5);
+
+    mallocator()->deallocate(buffer);
 }
 
-TEST(StaticArrayInit5)
+TEST(ArrayInit5)
 {
-    static_array<int, 5> a = make_static_array<5>(5, 4, 3, 2, 1);
+    auto buffer = mallocator()->allocate_buffer(5 * sizeof(int));
+    array<int> a = make_array<int>(buffer, 5, 4, 3, 2, 1);
 
     int *data = a.data();
     TEST_ASSERT_EQ(data[0], 5);
@@ -55,11 +63,14 @@ TEST(StaticArrayInit5)
     TEST_ASSERT_EQ(data[4], 1);
     TEST_ASSERT_EQ(a.size(), 5);
     TEST_ASSERT_EQ(a.capacity(), 5);
+
+    mallocator()->deallocate(buffer);
 }
 
-TEST(StaticArrayBeginAndEnd)
+TEST(ArrayBeginAndEnd)
 {
-    static_array<int, 5> a = make_static_array<5>(5, 4, 3, 2, 1);
+    auto buffer = mallocator()->allocate_buffer(5 * sizeof(int));
+    array<int> a = make_array<int>(buffer, 5, 4, 3, 2, 1);
 
     auto it = a.begin();
     TEST_ASSERT_EQ(*it, 5);
@@ -68,11 +79,14 @@ TEST(StaticArrayBeginAndEnd)
     TEST_ASSERT_EQ(*(it + 3), 2);
     TEST_ASSERT_EQ(*(it + 4), 1);
     TEST_ASSERT_EQ(it + 5, a.end());
+
+    mallocator()->deallocate(buffer);
 }
 
-TEST(StaticArrayResize)
+TEST(ArrayResize)
 {
-    static_array<int, 5> a = make_static_array<5>(5, 4, 3);
+    auto buffer1 = mallocator()->allocate_buffer(5 * sizeof(int));
+    array<int> a = make_array<int>(buffer1, 5, 4, 3);
 
     TEST_ASSERT_EQ(a.size(), 3);
     a.resize(1);
@@ -80,7 +94,10 @@ TEST(StaticArrayResize)
     a.resize(5);
     TEST_ASSERT_EQ(a.size(), 5);
 
-    static_array<int, 5> b = make_static_array<5>(5, 4, 3);
+    mallocator()->deallocate(buffer1);
+
+    auto buffer2 = mallocator()->allocate_buffer(5 * sizeof(int));
+    array<int> b = make_array<int>(buffer2, 5, 4, 3);
     b.resize(5, 12);
 
     TEST_ASSERT_EQ(b[0], 5);
@@ -89,11 +106,14 @@ TEST(StaticArrayResize)
     TEST_ASSERT_EQ(b[3], 12);
     TEST_ASSERT_EQ(b[4], 12);
     TEST_ASSERT_EQ(b.size(), 5);
+
+    mallocator()->deallocate(buffer2);
 }
 
-TEST(StaticArrayPushBack)
+TEST(ArrayPushBack)
 {
-    static_array<int, 5> a = make_static_array<5, int>();
+    auto buffer = mallocator()->allocate_buffer(5 * sizeof(int));
+    array<int> a = make_array<int>(buffer);
 
     // reference push_back() noexcept;
     int& a1 = a.push_back();
@@ -127,11 +147,14 @@ TEST(StaticArrayPushBack)
     TEST_ASSERT_EQ(a.size(), 1);
     a.pop_back();
     TEST_ASSERT_EQ(a.size(), 0);
+
+    mallocator()->deallocate(buffer);
 }
 
-TEST(StaticArrayInsert)
+TEST(ArrayInsert)
 {
-    static_array<int, 10> a = make_static_array<10>(1);
+    auto buffer = mallocator()->allocate_buffer(10 * sizeof(int));
+    array<int> a = make_array<int>(buffer, 1);
 
     // [1] => [2, 1]
     a.insert(a.begin(), 2);
@@ -162,13 +185,18 @@ TEST(StaticArrayInsert)
     TEST_ASSERT_EQ(a[5], 2);
     TEST_ASSERT_EQ(a[6], 1);
     TEST_ASSERT_EQ(a.size(), 7);
+
+    mallocator()->deallocate(buffer);
 }
 
-TEST(StaticArrayClear)
+TEST(ArrayClear)
 {
-    static_array<int, 5> a = make_static_array<5>(5, 4, 3, 2, 1);
+    auto buffer = mallocator()->allocate_buffer(5 * sizeof(int));
+    array<int> a = make_array<int>(buffer, 5, 4, 3, 2, 1);
 
     a.clear();
     TEST_ASSERT_EQ(a.size(), 0);
     TEST_ASSERT_EQ(a.capacity(), 5);
+
+    mallocator()->deallocate(buffer);
 }
