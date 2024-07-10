@@ -12,6 +12,8 @@
     TEST_RUN(ArrayBeginAndEnd); \
     TEST_RUN(ArrayResize); \
     TEST_RUN(ArrayPushBack); \
+    TEST_RUN(ArrayEmplace); \
+    TEST_RUN(ArrayEmplaceBack); \
     TEST_RUN(ArrayInsert); \
     TEST_RUN(ArrayErase); \
     TEST_RUN(ArrayEraseFirst); \
@@ -149,6 +151,85 @@ TEST(ArrayPushBack)
     TEST_ASSERT_EQ(a.size(), 1);
     a.pop_back();
     TEST_ASSERT_EQ(a.size(), 0);
+
+    mallocator()->deallocate(buffer);
+}
+
+struct test__array_emplace_value
+{
+    float x = 0.f;
+    float y = 0.f;
+
+    test__array_emplace_value() = default;
+    test__array_emplace_value(float x, float y) : x(x), y(y) {}
+};
+
+TEST(ArrayEmplace)
+{
+    auto buffer = mallocator()->allocate_buffer(5 * sizeof(test__array_emplace_value));
+    array<test__array_emplace_value> a = make_array<test__array_emplace_value>(buffer);
+
+    TEST_ASSERT_EQ(a.size(), 0);
+    a.emplace(a.end(), test__array_emplace_value{1.f, 2.f});
+    TEST_ASSERT_EQ(a.size(), 1);
+    a.emplace(a.begin(), 2.f, 4.f);
+    TEST_ASSERT_EQ(a.size(), 2);
+    a.emplace(a.end(), 3.f, 8.f);
+    TEST_ASSERT_EQ(a.size(), 3);
+    a.emplace(a.end(), 4.f, 16.f);
+    TEST_ASSERT_EQ(a.size(), 4);
+    a.emplace(a.begin(), 5.f, 32.f);
+    TEST_ASSERT_EQ(a.size(), 5);
+
+    TEST_ASSERT_EQ(a[2].x, 1.f);
+    TEST_ASSERT_EQ(a[2].y, 2.f);
+
+    TEST_ASSERT_EQ(a[1].x, 2.f);
+    TEST_ASSERT_EQ(a[1].y, 4.f);
+
+    TEST_ASSERT_EQ(a[3].x, 3.f);
+    TEST_ASSERT_EQ(a[3].y, 8.f);
+
+    TEST_ASSERT_EQ(a[4].x, 4.f);
+    TEST_ASSERT_EQ(a[4].y, 16.f);
+
+    TEST_ASSERT_EQ(a[0].x, 5.f);
+    TEST_ASSERT_EQ(a[0].y, 32.f);
+
+    mallocator()->deallocate(buffer);
+}
+
+TEST(ArrayEmplaceBack)
+{
+    auto buffer = mallocator()->allocate_buffer(5 * sizeof(test__array_emplace_value));
+    array<test__array_emplace_value> a = make_array<test__array_emplace_value>(buffer);
+
+    TEST_ASSERT_EQ(a.size(), 0);
+    a.emplace_back(1.f, 2.f);
+    TEST_ASSERT_EQ(a.size(), 1);
+    a.emplace_back(2.f, 4.f);
+    TEST_ASSERT_EQ(a.size(), 2);
+    a.emplace_back(3.f, 8.f);
+    TEST_ASSERT_EQ(a.size(), 3);
+    a.emplace_back(4.f, 16.f);
+    TEST_ASSERT_EQ(a.size(), 4);
+    a.emplace_back(5.f, 32.f);
+    TEST_ASSERT_EQ(a.size(), 5);
+
+    TEST_ASSERT_EQ(a[0].x, 1.f);
+    TEST_ASSERT_EQ(a[0].y, 2.f);
+
+    TEST_ASSERT_EQ(a[1].x, 2.f);
+    TEST_ASSERT_EQ(a[1].y, 4.f);
+
+    TEST_ASSERT_EQ(a[2].x, 3.f);
+    TEST_ASSERT_EQ(a[2].y, 8.f);
+
+    TEST_ASSERT_EQ(a[3].x, 4.f);
+    TEST_ASSERT_EQ(a[3].y, 16.f);
+
+    TEST_ASSERT_EQ(a[4].x, 5.f);
+    TEST_ASSERT_EQ(a[4].y, 32.f);
 
     mallocator()->deallocate(buffer);
 }

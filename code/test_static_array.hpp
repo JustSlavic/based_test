@@ -11,6 +11,8 @@
     TEST_RUN(StaticArrayBeginAndEnd); \
     TEST_RUN(StaticArrayResize); \
     TEST_RUN(StaticArrayPushBack); \
+    TEST_RUN(StaticArrayEmplace); \
+    TEST_RUN(StaticArrayEmplaceBack); \
     TEST_RUN(StaticArrayInsert); \
     TEST_RUN(StaticArrayErase); \
     TEST_RUN(StaticArrayEraseFirst); \
@@ -130,6 +132,80 @@ TEST(StaticArrayPushBack)
     a.pop_back();
     TEST_ASSERT_EQ(a.size(), 0);
 }
+
+struct test__static_array_emplace_value
+{
+    float x = 0.f;
+    float y = 0.f;
+
+    test__static_array_emplace_value() = default;
+    test__static_array_emplace_value(float x, float y) : x(x), y(y) {}
+};
+
+TEST(StaticArrayEmplace)
+{
+    auto a = make_static_array<5, test__static_array_emplace_value>();
+
+    TEST_ASSERT_EQ(a.size(), 0);
+    a.emplace(a.end(), 1.f, 2.f);
+    TEST_ASSERT_EQ(a.size(), 1);
+    a.emplace(a.begin(), 2.f, 4.f);
+    TEST_ASSERT_EQ(a.size(), 2);
+    a.emplace(a.end(), 3.f, 8.f);
+    TEST_ASSERT_EQ(a.size(), 3);
+    a.emplace(a.end(), 4.f, 16.f);
+    TEST_ASSERT_EQ(a.size(), 4);
+    a.emplace(a.begin(), 5.f, 32.f);
+    TEST_ASSERT_EQ(a.size(), 5);
+
+    TEST_ASSERT_EQ(a[2].x, 1.f);
+    TEST_ASSERT_EQ(a[2].y, 2.f);
+
+    TEST_ASSERT_EQ(a[1].x, 2.f);
+    TEST_ASSERT_EQ(a[1].y, 4.f);
+
+    TEST_ASSERT_EQ(a[3].x, 3.f);
+    TEST_ASSERT_EQ(a[3].y, 8.f);
+
+    TEST_ASSERT_EQ(a[4].x, 4.f);
+    TEST_ASSERT_EQ(a[4].y, 16.f);
+
+    TEST_ASSERT_EQ(a[0].x, 5.f);
+    TEST_ASSERT_EQ(a[0].y, 32.f);
+}
+
+TEST(StaticArrayEmplaceBack)
+{
+    auto a = make_static_array<5, test__static_array_emplace_value>();
+
+    TEST_ASSERT_EQ(a.size(), 0);
+    a.emplace_back(1.f, 2.f);
+    TEST_ASSERT_EQ(a.size(), 1);
+    a.emplace_back(2.f, 4.f);
+    TEST_ASSERT_EQ(a.size(), 2);
+    a.emplace_back(3.f, 8.f);
+    TEST_ASSERT_EQ(a.size(), 3);
+    a.emplace_back(4.f, 16.f);
+    TEST_ASSERT_EQ(a.size(), 4);
+    a.emplace_back(5.f, 32.f);
+    TEST_ASSERT_EQ(a.size(), 5);
+
+    TEST_ASSERT_EQ(a[0].x, 1.f);
+    TEST_ASSERT_EQ(a[0].y, 2.f);
+
+    TEST_ASSERT_EQ(a[1].x, 2.f);
+    TEST_ASSERT_EQ(a[1].y, 4.f);
+
+    TEST_ASSERT_EQ(a[2].x, 3.f);
+    TEST_ASSERT_EQ(a[2].y, 8.f);
+
+    TEST_ASSERT_EQ(a[3].x, 4.f);
+    TEST_ASSERT_EQ(a[3].y, 16.f);
+
+    TEST_ASSERT_EQ(a[4].x, 5.f);
+    TEST_ASSERT_EQ(a[4].y, 32.f);
+}
+
 
 TEST(StaticArrayInsert)
 {
